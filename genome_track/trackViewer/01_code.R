@@ -1,5 +1,7 @@
 # https://mp.weixin.qq.com/s/iLFne1yAFv5Udj9dCNsUHw
 
+rm(list=ls())
+
 library(trackViewer)
 
 # 棒棒糖图
