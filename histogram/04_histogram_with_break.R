@@ -37,7 +37,7 @@ p2
 mycolor <- c("#FF99CC","#99CC00","#FF9999","#FF9900")
 p3 <- p2 + scale_fill_manual(values=ggplot2::alpha(mycolor,0.9))+
   scale_y_continuous(limits = c(0, 150),
-                     expand=expansion(add = c(0, 5)))
+                     expand=expansion(add = c(0, 5)))  # 0控制离横轴距离，5控制离纵轴单元间隔
 p3
 
 #自定义图表主题，对图表主题做精细调整；
