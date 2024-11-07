@@ -1,41 +1,8 @@
 library(tidyverse)
 library(data.table)
-
-# 过滤前
-meth_df= fread("/home/wtian/project/HZAU_cohort_meth/01_methylation_identify/03_150_samples/01_150_sample_merge_result_noSci.tsv", 
+setwd("/home/wtian/play_ground/plot/histogram")
+meth_counts= fread("/home/wtian/play_ground/plot/datasets/others/chr_counts_stats.tsv", 
             sep="\t")
-meth_df[1:4,1:4]
-dim(meth_df)
-
-# 过滤后
-meth_flt = fread("02_sites_MissRate_0.1_flt_meth.tsv", sep="\t")
-meth_flt[1:4,1:4]
-dim(meth_flt)
-
-# 统计过滤前后每条染色体上的位点数量
-meth_df_counts = meth_df %>% 
-  group_by(chr) %>% 
-  summarise(n=n())
-meth_flt_counts = meth_flt %>%
-  group_by(chr) %>% 
-  summarise(n=n())
-
-# 指定染色体顺序
-ind_chr = c("chr1","chr2","chr3","chr4","chr5","chr6","chr7","chr8","chr9","chr10","chr11","chr12","chr13","chr14","chr15","chr16","chr17","chr18","chr19","chr20","chr21","chr22","chrX","chrY","chrM")
-meth_df_counts = meth_df_counts[match(ind_chr, meth_df_counts$chr),]
-meth_flt_counts = meth_flt_counts[match(ind_chr, meth_flt_counts$chr),]
-# 按照染色体顺序合并
-meth_counts = left_join(meth_df_counts, meth_flt_counts, by="chr")
-meth_counts = as.data.frame(meth_counts)
-meth_counts
-# NA填为0
-meth_counts[is.na(meth_counts)] = 0
-colnames(meth_counts) = c("chr","all","flt")
-write.table(meth_counts, "04_chr_counts_stats.tsv", sep="\t", quote=F, row.names=F)
-
-# 计算一列被过滤的位点数量
-meth_counts$drp = meth_counts$all - meth_counts$flt
-meth_counts
 
 data = meth_counts %>% select(chr, flt, drp)
 colnames(data) = c("chr", "pass", "drop")
@@ -61,5 +28,5 @@ p = ggplot(data = data_long, aes(x=chr,y=count,fill=type))+
   )
 
 # 保存
-ggsave("04_chr_counts_stats.pdf", p, width = 12, height = 8)
+ggsave("05_stack_chr_counts_stats.pdf", p, width = 12, height = 8)
 
