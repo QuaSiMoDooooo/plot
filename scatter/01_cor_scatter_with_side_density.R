@@ -14,7 +14,7 @@ head(dat)
 p1 <- ggscatter( dat, x = "gene1", y = "gene2",
            add = "reg.line", conf.int = TRUE,
            add.params = list(color = "#B3C8CF", fill = "lightgray"))+
-  stat_cor()+
+  stat_cor()+  # 默认是pearson相关系数 ，也可以设置method = "spearman"
   theme_bw()
 
 p2 <- ggplot(dat, aes(gene1)) +

@@ -1,0 +1,107 @@
+```{r}
+# install.packages('funkyheatmap')
+library(funkyheatmap)
+library(tidyverse)
+```
+
+```{r}
+#使用内置数据集mtcars测试：
+dt <- mtcars
+head(dt)
+```
+
+```{r}
+#可视化部分数据集：
+funky_heatmap(dt[1:10,])
+#使用几何图形映射数据大小，默认按列对每列值缩放到0-1内(min-max scaling),并绘制热图
+```
+
+进阶数据框热图绘制
+```{r}
+#另一个数据集载入：
+data("dynbenchmark_data") #Saelens et al.(2019).
+data <- dynbenchmark_data$data
+data #51*159大数据框
+```
+
+```{r}
+#选择要查看的列：
+preview_cols <- c(
+  "id",
+  "method_source",
+  "method_platform",
+  "benchmark_overall_norm_correlation",
+  "benchmark_overall_norm_featureimp_wcor",
+  "benchmark_overall_norm_F1_branches",
+  "benchmark_overall_norm_him",
+  "benchmark_overall_overall"
+)
+data[, preview_cols] #该数据框既含分类列，又含数值列
+```
+
+
+```{r}
+#绘制数据框热图：
+p <- funky_heatmap(data[1:12, preview_cols])
+p
+```
+
+
+```{r}
+#附加行列信息，绘制更个性化数据框热图
+#添加列信息：
+column_info <- dynbenchmark_data$column_info
+column_info #具体所需的格式信息可对照该范例数据，或?funky_heatmap()查看
+```
+
+
+```{r}
+p1 <- funky_heatmap(data,
+                    column_info = column_info)
+p1
+```
+
+
+```{r}
+#继续对列和行进行分组,对图表效果进行调整:
+column_groups <- dynbenchmark_data$column_groups #添加列分组
+column_groups
+```
+
+
+```{r}
+row_info <- dynbenchmark_data$row_info #添加行信息
+row_info
+```
+
+
+```{r}
+row_groups <- dynbenchmark_data$row_groups #添加行分组
+row_groups
+```
+
+
+```{r}
+palettes <- dynbenchmark_data$palettes #添加色板
+palettes
+```
+
+```{r}
+#绘图:
+p2 <- funky_heatmap(
+  data = data,
+  column_info = column_info,
+  column_groups = column_groups,
+  row_info = row_info,
+  row_groups = row_groups,
+  palettes = palettes,
+  position_args = position_arguments(col_annot_offset = 3.2)
+)
+p2
+```
+
+```{r}
+#图表保存到本地：
+ggsave("03_table_heatmap.pdf", p2,
+       device = cairo_pdf, width = p2$width, height = p2$height)
+```
